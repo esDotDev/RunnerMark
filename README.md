@@ -29,3 +29,15 @@ We’re going to look at the following rendering methods:
 * Starling - Dynamic Texture Atlas
 * ND2D - Sprite2DBatch
 * Genome2D - G2NativeRenderer
+
+Binaries
+===============
+Android binaries are available for download so you can test immediately:
+
+* [GPU Mode](https://github.com/esDotDev/RunnerMark/blob/master/bin/RunnerMark-GPU.apk?raw=true)
+* [Starling](https://github.com/esDotDev/RunnerMark/blob/master/bin/RunnerMark-Starling.apk?raw=true)
+* [ND2D](https://github.com/esDotDev/RunnerMark/blob/master/bin/RunnerMark-ND2D.apk?raw=true)
+* [Genome2D](https://github.com/esDotDev/RunnerMark/blob/master/bin/RunnerMark-G2NativeRenderer.apk?raw=true)
+
+
+iOS binaries must be compiled manually in order to specify the correct provisioning files for your device.
