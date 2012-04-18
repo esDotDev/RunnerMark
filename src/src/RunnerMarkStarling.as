@@ -35,7 +35,7 @@ package
 		}
 		
 		override protected function createStats():void {
-			new FastStatsStarling(StarlingScene.instance, true);
+			new FastStatsStarling(StarlingScene.instance);
 		}
 	}
 }
