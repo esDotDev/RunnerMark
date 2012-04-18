@@ -51,16 +51,6 @@ package
 			createStats();
 		}
 		
-		protected function onMouseClicked(event:MouseEvent):void {
-			if(engine.numEnemies < 10){
-				
-			} else if(engine.numEnemies < 50){
-				engine.addEnemies(10);
-			} else {
-				engine.addEnemies(25);
-			}
-		}
-		
 		protected function createStats():void {
 			new FastStats(this);
 		}
@@ -70,8 +60,8 @@ package
 			prevTime = getTimer();
 			engine.step(elapsed);
 			
-			if(isMouseDown && getTimer() - lastAdd > 100){ 
-				engine.addEnemies(engine.numEnemies > 150? 3 : 1); 
+			if(isMouseDown && getTimer() - lastAdd > 50){ 
+				engine.addEnemies(1); 
 				lastAdd = getTimer();
 			}
 		}
