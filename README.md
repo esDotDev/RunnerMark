@@ -3,13 +3,13 @@ RunnerMark
 
 A performance benchmark for Adobe AIR in the style of an Endless Runner game.
 
-* [Watch a video of it in action...](http://vimeo.com/41065357)
+Runner Mark is designed to compare rendering performance of GPU Render Mode, and the various Stage3D 2D Frameworks such as *ND2D*, *Starling* and *Genome2D*.
 
-Runner Mark is designed to compare rendering performance of GPU Render Mode, and the various Stage3D 2D Frameworks such as ND2D, Starling and Genome2D.
+* <a href="http://vimeo.com/41065357" target="_blank">Watch a video of it in action...</a>
 
-Unlike other benchmarks, which tend to test just one aspect of a rendering system, Runner Mark aims to simulate multiple types of load, similar to what you would see in a typical game.
+Runner Mark aims to simulate multiple types of simultaneous load, similar to what you would see in a typical game.
 
-Specifically, RunnerMark includes the following features:
+Specifically, RunnerMark includes the following elements:
 
 * 1 Main character with a run animation
 * Enemies with a “Chomp” animation
@@ -18,6 +18,7 @@ Specifically, RunnerMark includes the following features:
 * Scrolling Ground Tiles
 * Scrolling Platforms
 * ~30 small dust sprites as your character runs, to simulate some level of a particles
+* Rudimentary AI and hit detection for all characters
 
 
 Scoring System
@@ -26,6 +27,21 @@ RunnerMark awards 580pts for rendering the basic scene at a solid 580 FPS. Then 
 
 As an example, a score of 650 would indicate the basic scene @ 58fps + 70 animated Enemies. A score of 400, indicates the basic scene was only able to render at 40fps, and no Enemy's were added at all. 
 
+
+Implementation
+==============
+Each benchmark is designed to be fully optimized for each framework in terms of rendering performance. 
+
+* [Starling Implementation](https://github.com/esDotDev/RunnerMark/blob/master/src/src/ca/esdot/runnermark/RunnerEngineStarling.as)
+All images are based off a single shared TextureAtlas.
+
+* [ND2D Implementation](https://github.com/esDotDev/RunnerMark/blob/master/src/src/ca/esdot/runnermark/RunnerEngineND2D.as)
+Rendered using a handful of Sprite2DBatch's, one for Enemies, one for Particles, one for Ground etc...
+
+* [Core Engine](https://github.com/esDotDev/RunnerMark/blob/master/src/src/ca/esdot/runnermark/RunnerEngine.as)
+Basic GPU Render Mode, uses simple Bitmaps() with shared bitmapData's. 
+
+
 Results
 =======
 
@@ -33,12 +49,6 @@ Results
 
 Binaries
 ===============
-Android binaries are available for download so you can test immediately:
-
-* [GPU Mode](https://github.com/esDotDev/RunnerMark/blob/master/bin/RunnerMark-GPU.apk?raw=true)
-* [Starling](https://github.com/esDotDev/RunnerMark/blob/master/bin/RunnerMark-Starling.apk?raw=true)
-* [ND2D](https://github.com/esDotDev/RunnerMark/blob/master/bin/RunnerMark-ND2D.apk?raw=true)
-* [Genome2D](https://github.com/esDotDev/RunnerMark/blob/master/bin/RunnerMark-G2DNativeRenderer.apk?raw=true)
-
+Check the [bin folder](https://github.com/esDotDev/RunnerMark/tree/master/bin) for some Android binaries.
 
 iOS binaries must be compiled manually in order to specify the correct provisioning files for your device.
