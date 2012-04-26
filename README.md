@@ -17,18 +17,16 @@ Specifically, RunnerMark includes the following features:
 * Scrolling Platforms
 * ~30 small dust sprites as your character runs, to simulate some level of a particles
 
-Initially the scene will open start with no enemies, to add enemies simply press down with your finger and they will begin pouring on to the stage.
+Scoring System
+==============
+RunnerMark awards 580pts for rendering the basic scene at a solid 580 FPS. Then 1 additional point for each animated Enemy added to the scene. 
 
-Using this, you can quickly compare rendering performance across target devices, to get a good "real world" idea of what type of rendering load can be handled, and also choose the rendering engine that will best suite your needs.
+As an example, a score of 650 would indicate the basic scene @ 58fps + 70 animated Enemies. A score of 400, indicates the basic scene was only able to render at 40fps, and no Enemy's were added at all. 
 
-Testing Methods
-===============
-We’re going to look at the following rendering methods:
+Results
+=======
 
-* GPU Render Mode - Uses the simple “bitmapData cache” method.
-* Starling - Dynamic Texture Atlas
-* ND2D - Sprite2DBatch
-* Genome2D - G2NativeRenderer
+* [Results-04-24-2012.txt](https://github.com/esDotDev/RunnerMark/blob/master/results/Results-04-24-2012.txt)
 
 Binaries
 ===============
