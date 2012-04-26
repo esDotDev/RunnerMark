@@ -1,5 +1,6 @@
 RUNNER MARK 1.0 
 April 25, 2012
+LIBS: Starling 1.0, Genome2D.0.9.0.1112, ND2D 2012-04-07 Build
 
 RunnerMark awards 580pts for rendering the basic scene at a solid 580 FPS. Then 1 additional point for each animated enemy added to the scene. 
 
@@ -15,6 +16,7 @@ Nexus One
 GPU - 410
 Starling - 450
 G2DNative - 260
+ND2D - 350
 
 iPad 2
 GPU - 839

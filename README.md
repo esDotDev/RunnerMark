@@ -27,6 +27,10 @@ RunnerMark awards 580pts for rendering the basic scene at a solid 580 FPS. Then 
 
 As an example, a score of 650 would indicate the basic scene @ 58fps + 70 animated Enemies. A score of 400, indicates the basic scene was only able to render at 40fps, and no Enemy's were added at all. 
 
+Results
+=======
+
+* [Results-04-24-2012.txt](https://github.com/esDotDev/RunnerMark/blob/master/results/Results-04-24-2012.txt)
 
 Implementation
 ==============
@@ -41,11 +45,6 @@ Rendered using a handful of Sprite2DBatch's, one for Enemies, one for Particles,
 * [Core Engine](https://github.com/esDotDev/RunnerMark/blob/master/src/src/ca/esdot/runnermark/RunnerEngine.as)
 Basic GPU Render Mode, uses simple Bitmaps() with shared bitmapData's. 
 
-
-Results
-=======
-
-* [Results-04-24-2012.txt](https://github.com/esDotDev/RunnerMark/blob/master/results/Results-04-24-2012.txt)
 
 Binaries
 ===============
