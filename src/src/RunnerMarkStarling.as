@@ -12,6 +12,7 @@ package
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
+	import starling.animation.Juggler;
 	import starling.core.Starling;
 	import starling.events.Event;
 	
@@ -19,14 +20,25 @@ package
 	public class RunnerMarkStarling extends RunnerMark
 	{
 		protected var _starling:Starling;
+		protected var initComplete:Boolean;
 		
 		override protected function init():void {
-			_starling = new Starling(StarlingScene, stage);
-			_starling.start();
-			_starling.addEventListener(starling.events.Event.CONTEXT3D_CREATE, onContextReady);
+			if(!initComplete){
+				initComplete = true;
+				_starling = new Starling(StarlingScene, stage);
+				_starling.start();
+				_starling.addEventListener(starling.events.Event.CONTEXT3D_CREATE, onContextReady);
+			} else {
+				createEngine();
+			}
 		}
 		
 		protected function onContextReady(event:starling.events.Event):void {
+			//We need to get the StarlingScene.instance, and for some reason it's still null... 
+			setTimeout(createEngine, 100);
+		}
+		
+		protected function createEngine():void {
 			addEventListener(flash.events.Event.ENTER_FRAME, onEnterFrame);
 			prevTime = getTimer();
 			
@@ -36,6 +48,11 @@ package
 		
 		override protected function createStats():void {
 			new FastStatsStarling(StarlingScene.instance);
+		}
+		
+		override protected function onEngineComplete():void {
+			Starling.juggler.purge();	
+			super.onEngineComplete();
 		}
 	}
 }

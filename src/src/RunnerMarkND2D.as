@@ -21,17 +21,20 @@ package
 		protected var world:World2D;
 		protected var scene2d:Scene2D;
 		
+		protected var initComplete:Boolean;
+		
 		override protected function init():void {
-			world = new World2D(Context3DRenderMode.AUTO, 60);
-			scene2d = new Scene2D();
-			
+			if(!initComplete){
+				initComplete = true;
+				world = new World2D(Context3DRenderMode.AUTO, 60);
+				scene2d = new Scene2D();
+				
+				addChild(world);
+				world.setActiveScene(scene2d); 
+				world.start();
+			} 
 			engine = new RunnerEngineND2D(scene2d, stage.stageWidth, stage.stageHeight);
 			createStats();
-			
-			addChild(world);
-			world.setActiveScene(scene2d); 
-			world.start();
-			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		

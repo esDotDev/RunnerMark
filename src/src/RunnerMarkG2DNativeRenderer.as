@@ -10,12 +10,21 @@ package
 
 	public class RunnerMarkG2DNativeRenderer extends RunnerMark
 	{
+		private var initComplete:Boolean;
 		override protected function init():void {
-			Genome2D.getInstance().onInitialized.addOnce(onGenomeComplete);
-			Genome2D.getInstance().init(stage, new GContextConfig());		
+			if(!initComplete){
+				initComplete = true;
+				Genome2D.getInstance().onInitialized.addOnce(initGenome);
+				Genome2D.getInstance().init(stage, new GContextConfig());	
+				//Tell Genome2D to render this sprite, and all it's children on the Stage.
+				Genome2D.getInstance().initNativeRenderer(this);
+			} else {
+				initGenome();	
+			}
+				
 		}
 		
-		protected function onGenomeComplete():void {
+		protected function initGenome():void {
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			prevTime = getTimer();
 			
@@ -23,10 +32,8 @@ package
 			s.visible = false;
 			addChild(s);
 			
-			//Tell Genome2D to render this sprite, and all it's children on the Stage.
-			Genome2D.getInstance().initNativeRenderer(this);
-			
 			engine = new RunnerEngine(s, stage.stageWidth, stage.stageHeight);
+			
 			createStats();
 			stats.visible = false;
 		}

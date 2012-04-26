@@ -35,7 +35,6 @@ package ca.esdot.runnermark
 		
 		override public function step(elapsed:Number):void {
 			super.step(elapsed);
-			FastStats.numChildren = enemyBatch.numChildren + groundBatch.numChildren + particleBatch.numChildren + 4;
 		}
 		
 		//Using Dynamic Atlas for ND2D
@@ -108,22 +107,10 @@ package ca.esdot.runnermark
 			return new EnemySprite(s, "enemy");
 		}
 		
-		
-		override protected function updateRunner(elapsed:Number){
-			super.updateRunner(elapsed);
-		}
-		
 		override protected function updateBg(elapsed:Number):void {
 			(bgStrip1.display as Sprite2D).material.uvOffsetX += elapsed * .00002;
 			(bgStrip2.display as Sprite2D).material.uvOffsetX += elapsed * .00002;
 		}
 		
-		override protected function updateGround(elapsed:Number){
-			super.updateGround(elapsed);
-		}
-		
-		override protected function updateParticles(elapsed:Number):void {
-			super.updateParticles(elapsed);
-		}
 	}
 }

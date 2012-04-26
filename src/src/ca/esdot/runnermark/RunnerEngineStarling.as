@@ -39,13 +39,20 @@ package ca.esdot.runnermark
 			_root.addChild(sky.display);
 			
 			//Create a TextureAtlas dynamically using the DynamicTexture plugin.
-			atlas = DynamicAtlas.fromClassVector(new <Class>[swc.Enemy, swc.Runner]);
+			atlas = DynamicAtlas.fromClassVector(new <Class>[
+				swc.Enemy, 
+				swc.Runner, 
+				Cloud, 
+				Bg1, 
+				Bg2,
+				GroundTop
+			]);
 			
 			var bitmap1:Image, bitmap2:Image;
 			var sprite:Sprite = new Sprite();
 			
 			//BG Strip 1
-			bitmap1 =  new Image(Texture.fromBitmap(new Bg1()));
+			bitmap1 =  new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg1")[0]);
 			bitmap1.smoothing = TextureSmoothing.NONE;
 			sprite.addChild(bitmap1);
 			bitmap2 = new Image(Texture.fromBitmap(new Bg1()));
@@ -57,7 +64,7 @@ package ca.esdot.runnermark
 			
 			//BG Strip 2
 			sprite = new Sprite();
-			bitmap1 =  new Image(Texture.fromBitmap(new Bg2()));
+			bitmap1 =  new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg2")[0]);
 			bitmap1.smoothing = TextureSmoothing.NONE;
 			sprite.addChild(bitmap1);
 			bitmap2 = new Image(Texture.fromBitmap(new Bg2()));
@@ -80,19 +87,13 @@ package ca.esdot.runnermark
 		}
 		
 		override protected function createGroundPiece():GenericSprite {
-			if(!groundTexture){
-				groundTexture = Texture.fromBitmap(new GroundTop());
-			}
-			var image:Image = new Image(groundTexture);
-			_root.addChild(image);
+			var image:Image = new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_GroundTop")[0]);
+			_root.addChildAt(image, _root.getChildIndex(bgStrip2.display) + 1);
 			return new GenericSprite(image);
 		}
 		
 		override protected function createParticle():GenericSprite {
-			if(!cloudTexture){
-				cloudTexture = Texture.fromBitmap(new Cloud());
-			}
-			var image:Image = new Image(cloudTexture);
+			var image:Image = new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Cloud")[0]);
 			_root.addChild(image);
 			return new GenericSprite(image);
 		}
@@ -100,7 +101,7 @@ package ca.esdot.runnermark
 		override protected function createEnemy():EnemySprite {
 			var enemy:MovieClip = new MovieClip(atlas.getTextures("swc::Enemy"), 60);
 			enemy.play();
-			_root.addChild(enemy);
+			_root.addChildAt(enemy, _root.getChildIndex(runner.display));
 			Starling.juggler.add(enemy);
 			return new EnemySprite(enemy);
 		}

@@ -12,6 +12,7 @@ package ca.esdot.runnermark
 	import flash.display.GradientType;
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
+	import flash.utils.getTimer;
 	
 	import swc.Runner;
 	
@@ -33,34 +34,43 @@ package ca.esdot.runnermark
 		protected static var Cloud:Class;
 		public static var cloudData:BitmapData = new Cloud().bitmapData;
 		
-		protected var _root:*;
-		
 		protected const SPEED:Number = .33;
 		
-		public var sky:GenericSprite;
-		public var bgStrip1:GenericSprite;
-		public var bgStrip2:GenericSprite;
-		public var runner:RunnerSprite;
+		//Display Objects
+		protected var _root:*;
+		protected var sky:GenericSprite;
+		protected var bgStrip1:GenericSprite;
+		protected var bgStrip2:GenericSprite;
+		protected var runner:RunnerSprite;
 		
 		protected var spritePool:Object = {};
-		
-		protected var lastGroundPiece:GenericSprite;
-		
 		protected var groundList:Array = [];
 		protected var particleList:Array = [];
 		protected var enemyList:Array = [];
 		
-		protected var ticks:int = 0;
-		
 		protected var stageWidth:int;
 		protected var stageHeight:int;
-		protected var groundY:int;
 		
-		protected var currentLoad:int = 20;
+		protected var steps:int = 0;
+		protected var startTime:int = 0;
+		protected var groundY:int;
+		protected var lastGroundPiece:GenericSprite;
+		
+		protected var incrementDelay:int = 250;
+		protected var maxIncrement:int = 12000;
+		protected var lastIncrement:int;
+		
+		public var fps:int = -1;
+		public var targetFPS:int = 58;
+		
+		protected var _runnerScore:int;
+		public var onComplete:Function;
 		
 		public function RunnerEngine(root:*, stageWidth:int, stageHeight:int){
 			super();
 			this._root = root;
+			lastIncrement = getTimer() + 2000;
+			runnerScore = 0;
 			
 			createChildren();
 			
@@ -94,6 +104,15 @@ package ca.esdot.runnermark
 			addParticles(32);
 		}
 		
+		public function get runnerScore():int{
+			return _runnerScore;
+		}
+
+		public function set runnerScore(value:int):void{
+			_runnerScore = value;
+			FastStats.numChildren = runnerScore; //Hijack the ChildCount var of FastStats
+		}
+
 	/**
 	 * CREATE METHODS
 	 * Override these to create a new type of testSuite
@@ -162,7 +181,7 @@ package ca.esdot.runnermark
 		
 	/**
 	 * UPDATE METHODS
-	 * You shouldn't need to override any of these, unless you're doing some advanced optimizations.
+	 * Probably won't need to override any of these, unless you're doing some advanced optimizations.
 	 **/
 		protected function updateRunner(elapsed:Number){
 			runner.update();
@@ -183,7 +202,7 @@ package ca.esdot.runnermark
 		
 		protected function updateGround(elapsed:Number){
 			//Add platforms
-			if(ticks % Math.round(100 - currentLoad * 2) == 0){
+			if(steps % (fps > 30? 100 : 50) == 0){
 				addGround(1, stageHeight * .25 + stageHeight * .5 * Math.random());
 			}
 			
@@ -209,7 +228,7 @@ package ca.esdot.runnermark
 		}
 		
 		protected function updateParticles(elapsed:Number):void {
-			if(ticks % 3 == 0){
+			if(steps % 3 == 0){
 				addParticles(3);
 			}
 			//Move Particls
@@ -253,8 +272,13 @@ package ca.esdot.runnermark
 	 * You shouldn't need to override anything below this.
 	 **/
 		public function step(elapsed:Number):void {
-			ticks++;
-			FastStats.numChildren = _root.numChildren;
+			steps++;
+			
+			if(enemyList.length > 0){
+				runnerScore = targetFPS * 10 + enemyList.length;
+			} else {
+				runnerScore = fps * 10;
+			}
 			
 			updateRunner(elapsed);
 			updateBg(elapsed);
@@ -267,7 +291,25 @@ package ca.esdot.runnermark
 				updateGround(elapsed);
 			}
 			updateParticles(elapsed);
+			
+			var increment:int = getTimer() - lastIncrement;
+			if(fps >= targetFPS && increment > incrementDelay){
+				addEnemies(1 + Math.floor(enemyList.length/50));
+				lastIncrement = getTimer();
+			} 
+			else if(increment > maxIncrement){
+				//Engine Is Complete!
+				if(onComplete){ onComplete(); }
+				stopEngine();
+			}
 		}
+		
+		protected function stopEngine():void {
+			while(_root.numChildren){
+				_root.removeChildAt(0);
+			}
+		}
+		
 		
 		protected function removeEnemy(enemy:GenericSprite):void {
 			if(enemy.display.parent){
@@ -305,16 +347,11 @@ package ca.esdot.runnermark
 			for(var i:int = 0; i < numEnemies; i++){
 				enemy = createEnemy(); 
 				enemy.y = groundY + runner.height - enemy.height;
-				enemy.x = stageWidth;
+				enemy.x = stageWidth - 50 + Math.random() * 100;
 				enemy.groundY = enemy.y;
 				enemy.y = -enemy.height;
 				enemyList.push(enemy);
 			}
-		}
-		
-		public function increaseLoad():void {
-			currentLoad++;
-			if(currentLoad > 50){ currentLoad = 50; }
 		}
 		
 		protected function createSkyData():BitmapData {

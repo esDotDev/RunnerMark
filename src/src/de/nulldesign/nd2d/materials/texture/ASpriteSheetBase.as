@@ -46,7 +46,7 @@ package de.nulldesign.nd2d.materials.texture {
 		protected var frameNameToIndex:Dictionary = new Dictionary();
 		protected var uvRects:Vector.<Rectangle>;
 		protected var animationMap:Dictionary = new Dictionary();
-		internal var activeAnimation:SpriteSheetAnimation;
+		protected var activeAnimation:SpriteSheetAnimation;
 
 		protected var spritesPackedWithoutSpace:Boolean;
 
@@ -108,6 +108,8 @@ package de.nulldesign.nd2d.materials.texture {
 
 			if(!activeAnimation) return;
 
+			var prevFrameIdx:int = frameIdx;
+
 			ctime = t;
 
 			// Update the timer part, to get time based animation
@@ -127,7 +129,11 @@ package de.nulldesign.nd2d.materials.texture {
 
 			otime = ctime;
 
-			if(triggerEventOnLastFrame && frameIdx == activeAnimation.numFrames - 1) {
+			// skipped frames
+			if(triggerEventOnLastFrame && (frameIdx == activeAnimation.numFrames - 1 || frameIdx < prevFrameIdx)) {
+				if(!activeAnimation.loop) {
+					triggerEventOnLastFrame = false;
+				}
 				dispatchEvent(new SpriteSheetAnimationEvent(SpriteSheetAnimationEvent.ANIMATION_FINISHED));
 			}
 		}

@@ -1,6 +1,9 @@
 package com.emibap.textureAtlas
 {
 
+	import com.emibap.textureAtlas.TextureItem;
+	
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
@@ -12,14 +15,12 @@ package com.emibap.textureAtlas
 	import flash.text.Font;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-    import flash.utils.getQualifiedClassName;
-
-    import starling.text.BitmapFont;
+	import flash.utils.getQualifiedClassName;
+	
+	import starling.text.BitmapFont;
+	import starling.text.TextField;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	import starling.text.TextField;
-	
-	import com.emibap.textureAtlas.TextureItem;
 	
 	/**
 	 * DynamicAtlas.as
@@ -280,7 +281,13 @@ package com.emibap.textureAtlas
         {
             var container:MovieClip = new MovieClip();
             for each (var assetClass:Class in assets) {
-                var assetInstance:MovieClip = new assetClass();
+				var o:* = new assetClass();
+				if(o is Bitmap){
+					var mc:MovieClip = new MovieClip();
+					mc.addChild(o as Bitmap);
+					o = mc;
+				}
+                var assetInstance:MovieClip = o as MovieClip;
                 assetInstance.name = getQualifiedClassName(assetClass);
                 container.addChild(assetInstance);
             }

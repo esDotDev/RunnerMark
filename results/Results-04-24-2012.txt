@@ -1,0 +1,35 @@
+RUNNER MARK 1.0 
+April 25, 2012
+
+RunnerMark awards 580pts for rendering the basic scene at a solid 580 FPS. Then 1 additional point for each animated enemy added to the scene. 
+
+RESULTS
+
+Galaxy Nexus
+GPU - 728
+Starling - 674
+ND2D - 290
+G2DNative - 200
+
+Nexus One
+GPU - 410
+Starling - 450
+G2DNative - 260
+
+iPad 2
+GPU - 839
+Starling - 686
+ND2D - 759
+G2DNative - 813
+
+iPad 1
+GPU - 595
+Starling - 490
+ND2D - 150
+G2DNative - 160
+
+iPhone 4
+GPU - 636
+Starling - 490
+ND2D - 200
+G2DNative - 180

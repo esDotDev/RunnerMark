@@ -95,7 +95,7 @@ package ca.esdot.stats
 			children.addChild(fpsLabel);
 			
 			spritesLabel = getTextField(tf);
-			spritesLabel.text = "SPRITE COUNT:";
+			spritesLabel.text = "SCORE:";
 			children.addChild(spritesLabel);
 			
 			memoryLabel = getTextField(tf);
