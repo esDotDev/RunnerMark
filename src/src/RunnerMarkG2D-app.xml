@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <application xmlns="http://ns.adobe.com/air/application/3.3">
  
-	<id>RunnerMarkStarling</id>
-	<filename>RM-Starling</filename>
-	<name>RM-Starling</name>
+	<id>RunnerMarkG2D</id>
+	<filename>RM-G2D</filename>
+	<name>RM-G2D</name>
 	<versionNumber>0.0.1</versionNumber>
  
 	<initialWindow>

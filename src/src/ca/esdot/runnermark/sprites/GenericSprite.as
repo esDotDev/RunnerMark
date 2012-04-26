@@ -32,12 +32,16 @@ package ca.esdot.runnermark.sprites
 		
 		public function get width():Number { return display.width; }
 		public function set width(value:Number):void {
-			display.width = value;
+			if("width" in display){	
+				display.width = value;
+			}
 		}
 		
 		public function get height():Number { return display.height; }
 		public function set height(value:Number):void {
-			display.height = value;
+			if("height" in display){	
+				display.height = value;
+			}
 		}
 		
 		public function get scaleX():Number { return display.scaleX; }
