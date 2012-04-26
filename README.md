@@ -23,7 +23,8 @@ Specifically, RunnerMark includes the following elements:
 
 Scoring System
 ==============
-RunnerMark awards 580pts for rendering the basic scene at a solid 580 FPS. Then 1 additional point for each animated Enemy added to the scene. 
+RunnerMark awards 580pts for rendering the basic scene at a solid 580 FPS. 
+Then 1 additional point for each animated Enemy added to the scene. 
 
 As an example, a score of 650 would indicate the basic scene @ 58fps + 70 animated Enemies. A score of 400, indicates the basic scene was only able to render at 40fps, and no Enemy's were added at all. 
 
