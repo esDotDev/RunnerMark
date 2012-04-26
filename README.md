@@ -3,6 +3,8 @@ RunnerMark
 
 A performance benchmark for Adobe AIR in the style of an Endless Runner game.
 
+* [Watch a video of it in action...](http://vimeo.com/41065357)
+
 Runner Mark is designed to compare rendering performance of GPU Render Mode, and the various Stage3D 2D Frameworks such as ND2D, Starling and Genome2D.
 
 Unlike other benchmarks, which tend to test just one aspect of a rendering system, Runner Mark aims to simulate multiple types of load, similar to what you would see in a typical game.
@@ -17,18 +19,17 @@ Specifically, RunnerMark includes the following features:
 * Scrolling Platforms
 * ~30 small dust sprites as your character runs, to simulate some level of a particles
 
-Initially the scene will open start with no enemies, to add enemies simply press down with your finger and they will begin pouring on to the stage.
 
-Using this, you can quickly compare rendering performance across target devices, to get a good "real world" idea of what type of rendering load can be handled, and also choose the rendering engine that will best suite your needs.
+Scoring System
+==============
+RunnerMark awards 580pts for rendering the basic scene at a solid 580 FPS. Then 1 additional point for each animated Enemy added to the scene. 
 
-Testing Methods
-===============
-We’re going to look at the following rendering methods:
+As an example, a score of 650 would indicate the basic scene @ 58fps + 70 animated Enemies. A score of 400, indicates the basic scene was only able to render at 40fps, and no Enemy's were added at all. 
 
-* GPU Render Mode - Uses the simple “bitmapData cache” method.
-* Starling - Dynamic Texture Atlas
-* ND2D - Sprite2DBatch
-* Genome2D - G2NativeRenderer
+Results
+=======
+
+* [Results-04-24-2012.txt](https://github.com/esDotDev/RunnerMark/blob/master/results/Results-04-24-2012.txt)
 
 Binaries
 ===============
