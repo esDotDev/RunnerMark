@@ -3,11 +3,11 @@ package ca.esdot.runnermark
 	import ca.esdot.runnermark.sprites.EnemySprite;
 	import ca.esdot.runnermark.sprites.GenericSprite;
 	import ca.esdot.runnermark.sprites.RunnerSprite;
+	import ca.esdot.runnermark.sprites.SizableNode;
 	import ca.esdot.stats.FastStats;
 	
 	import com.genome2d.components.GTransform;
 	import com.genome2d.core.GNode;
-	
 	import com.gskinner.zoe.utils.CachedClip;
 	
 	import flash.display.Bitmap;
@@ -74,6 +74,8 @@ package ca.esdot.runnermark
 			this._root = root;
 			lastIncrement = getTimer() + 2000;
 			runnerScore = 0;
+			
+			var classes:Array = [new GNode()];
 			
 			createChildren();
 			
