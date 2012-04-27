@@ -4,11 +4,16 @@ package ca.esdot.runnermark
 	import ca.esdot.runnermark.sprites.GenericSprite;
 	import ca.esdot.runnermark.sprites.RunnerSprite;
 	
+	import com.genome2d.components.GCamera;
 	import com.genome2d.components.renderables.GSprite;
 	import com.genome2d.core.GNode;
+	import com.genome2d.textures.GTexture;
+	import com.genome2d.textures.GTextureAtlas;
+	import com.genome2d.textures.factories.GTextureAtlasFactory;
 	import com.genome2d.textures.factories.GTextureFactory;
 	
 	import flash.display.BitmapData;
+	import flash.display.MovieClip;
 
 	public class RunnerEngineG2D extends RunnerEngine
 	{
@@ -18,12 +23,25 @@ package ca.esdot.runnermark
 		
 		override public function createChildren():void {
 			
+			//Add Camera
+			var cameraNode:GNode = new GNode();
+			var cam:GCamera = cameraNode.addComponent(GCamera) as GCamera;
+			_root.addChild(cameraNode);
+			
+			//Create Sky
 			var skyData:BitmapData = createSkyData();			
-			var node:GNode = new GNode();
-			var sprite:GSprite = new GSprite(node);
-			sprite.setTexture(GTextureFactory.createFromBitmapData("sky", skyData, false)); 
-			sky = new GenericSprite(node);
-			_root.addChild(node);
+			var skyNode:GNode = new GNode();
+			var skySprite:GSprite = skyNode.addComponent(GSprite) as GSprite;
+			skySprite.setTexture(GTextureFactory.createFromBitmapData("sky", skyData, false)); 
+			sky = new GenericSprite(skyNode, null, skyData.width, skyData.height);
+			_root.addChild(skyNode);
+			
+			var bgNode:GNode = new GNode();
+			var sprite:GSprite = bgNode.addComponent(GSprite) as GSprite;
+			sprite.setTexture(GTextureFactory.createFromBitmapData("bg1", bg1Data, true));
+			
+			bgStrip1 = new GenericSprite(bgNode, null, bg1Data.width, bg1Data.height);
+			_root.addChild(bgNode);
 			
 			//Create a TextureAtlas dynamically using the DynamicTexture plugin.
 			/*
@@ -76,6 +94,10 @@ package ca.esdot.runnermark
 			
 			runner = new RunnerSprite({});
 			//_root.addChild(runner.display);
+		}
+		
+		override protected function stopEngine():void {
+			(_root as GNode).disposeChildren();
 		}
 		
 		override protected function createGroundPiece():GenericSprite {

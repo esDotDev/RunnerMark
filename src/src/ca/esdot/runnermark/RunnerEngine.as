@@ -5,6 +5,9 @@ package ca.esdot.runnermark
 	import ca.esdot.runnermark.sprites.RunnerSprite;
 	import ca.esdot.stats.FastStats;
 	
+	import com.genome2d.components.GTransform;
+	import com.genome2d.core.GNode;
+	
 	import com.gskinner.zoe.utils.CachedClip;
 	
 	import flash.display.Bitmap;
@@ -298,7 +301,7 @@ package ca.esdot.runnermark
 				lastIncrement = getTimer();
 			} 
 			else if(increment > maxIncrement){
-				//Engine Is Complete!
+				//Test is Complete!
 				if(onComplete){ onComplete(); }
 				stopEngine();
 			}
