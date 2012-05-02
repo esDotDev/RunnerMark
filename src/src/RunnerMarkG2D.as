@@ -2,6 +2,7 @@ package
 {
 	import ca.esdot.runnermark.RunnerEngineG2D;
 	import ca.esdot.runnermark.RunnerEngineND2D;
+	import ca.esdot.stats.FastStats;
 	
 	import com.genome2d.context.GContextConfig;
 	import com.genome2d.core.GNode;
@@ -42,7 +43,7 @@ package
 		}
 		
 		override protected function createStats():void {
-			//new FastStatsND2D(content);
+			stats = new FastStats(this);
 		}
 	}
 }
