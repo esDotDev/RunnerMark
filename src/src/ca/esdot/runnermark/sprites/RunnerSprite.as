@@ -8,6 +8,8 @@ package ca.esdot.runnermark.sprites
 		}
 		
 		public function update():void {
+			return; 
+			
 			velY += gravity;
 			y += velY; 
 			if(y > groundY){

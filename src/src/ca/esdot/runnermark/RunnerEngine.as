@@ -217,7 +217,7 @@ package ca.esdot.runnermark
 				ground = groundList[i];
 				ground.x -= elapsed * SPEED;
 				//Remove ground
-				if(ground.x < -ground.width){
+				if(ground.x < -ground.width * 3){
 					groundList.splice(i, 1);
 					putSprite(ground);
 					if(ground.display.parent){
@@ -330,7 +330,7 @@ package ca.esdot.runnermark
 			var piece:GenericSprite;
 			for(var i:int = 0; i < numPieces; i++){
 				piece = createGroundPiece(); 
-				piece.y = groundY + runner.height * .9 - height;
+				piece.y = runner.y + runner.height * .9 - height;
 				piece.x = lastX;
 				lastX += piece.width;
 				groundList.push(piece);
@@ -351,7 +351,7 @@ package ca.esdot.runnermark
 			var enemy:EnemySprite;
 			for(var i:int = 0; i < numEnemies; i++){
 				enemy = createEnemy(); 
-				enemy.y = groundY + runner.height - enemy.height;
+				enemy.y = runner.y + runner.height - enemy.height;
 				enemy.x = stageWidth - 50 + Math.random() * 100;
 				enemy.groundY = enemy.y;
 				enemy.y = -enemy.height;
@@ -371,6 +371,13 @@ package ca.esdot.runnermark
 		
 		public function get numEnemies():int {
 			return enemyList.length;
+		}
+		
+		protected function removeAllGround():void {
+			while(groundList && groundList.length > 0){ 
+				_root.removeChild(groundList[0].display);
+				groundList.shift();
+			}
 		}
 		
 		//Simple Pooling Functions

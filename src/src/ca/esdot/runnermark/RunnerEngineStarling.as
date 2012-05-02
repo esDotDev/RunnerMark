@@ -55,7 +55,7 @@ package ca.esdot.runnermark
 			bitmap1 =  new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg1")[0]);
 			bitmap1.smoothing = TextureSmoothing.NONE;
 			sprite.addChild(bitmap1);
-			bitmap2 = new Image(Texture.fromBitmap(new Bg1()));
+			bitmap2 = new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg1")[0]);
 			bitmap2.smoothing = TextureSmoothing.NONE;
 			bitmap2.x = bitmap1.width;
 			sprite.addChild(bitmap2);
@@ -67,7 +67,7 @@ package ca.esdot.runnermark
 			bitmap1 =  new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg2")[0]);
 			bitmap1.smoothing = TextureSmoothing.NONE;
 			sprite.addChild(bitmap1);
-			bitmap2 = new Image(Texture.fromBitmap(new Bg2()));
+			bitmap2 = new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg2")[0]);
 			bitmap2.smoothing = TextureSmoothing.NONE;
 			bitmap2.x = bitmap1.width;
 			sprite.addChild(bitmap2);
