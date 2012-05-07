@@ -1,11 +1,6 @@
 package ca.esdot.runnermark.sprites
 {
-	import com.genome2d.components.GComponent;
-	import com.genome2d.components.renderables.GSprite;
 	import com.genome2d.core.GNode;
-	import com.genome2d.textures.GTexture;
-	
-	import flash.geom.Rectangle;
 	
 	public class SizableNode extends GNode
 	{
