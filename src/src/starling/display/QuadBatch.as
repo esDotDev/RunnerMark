@@ -8,7 +8,7 @@
 //
 // =================================================================================================
 
-package starling.core
+package starling.display
 {
     import com.adobe.utils.AGALMiniAssembler;
     
@@ -19,34 +19,45 @@ package starling.core
     import flash.display3D.VertexBuffer3D;
     import flash.geom.Matrix;
     import flash.geom.Matrix3D;
-    import flash.geom.Point;
     import flash.geom.Rectangle;
     import flash.utils.getQualifiedClassName;
     
-    import starling.display.BlendMode;
-    import starling.display.DisplayObject;
-    import starling.display.DisplayObjectContainer;
-    import starling.display.Image;
-    import starling.display.Quad;
+    import starling.core.RenderSupport;
+    import starling.core.Starling;
+    import starling.core.starling_internal;
     import starling.errors.MissingContextError;
     import starling.events.Event;
     import starling.textures.Texture;
     import starling.textures.TextureSmoothing;
     import starling.utils.VertexData;
-    import starling.utils.transformCoords;
+    
+    use namespace starling_internal;
     
     /** Optimizes rendering of a number of quads with an identical state.
      * 
      *  <p>The majority of all rendered objects in Starling are quads. In fact, all the default
      *  leaf nodes of Starling are quads (the Image and Quad classes). The rendering of those 
-     *  quads can be accelerated by a big factor if all quads with an identical state (i.e. same 
-     *  texture, same smoothing and mipmapping settings) are sent to the GPU in just one call. 
-     *  That's what the QuadBatch class can do.</p>
+     *  quads can be accelerated by a big factor if all quads with an identical state are sent 
+     *  to the GPU in just one call. That's what the QuadBatch class can do.</p>
+     *  
+     *  <p>The 'flatten' method of the Sprite class uses this class internally to optimize its 
+     *  rendering performance. In most situations, it is recommended to stick with flattened
+     *  sprites, because they are easier to use. Sometimes, however, it makes sense
+     *  to use the QuadBatch class directly: e.g. you can add one quad multiple times to 
+     *  a quad batch, whereas you can only add it once to a sprite. Furthermore, this class
+     *  does not dispatch <code>ADDED</code> or <code>ADDED_TO_STAGE</code> events when a quad
+     *  is added, which makes it more lightweight.</p>
+     *  
+     *  <p>One QuadBatch object is bound to a specific render state. The first object you add to a 
+     *  batch will decide on the QuadBatch's state, that is: its texture, its settings for 
+     *  smoothing and blending, and if it's tinted (colored vertices and/or transparency). 
+     *  When you reset the batch, it will accept a new state on the next added quad.</p> 
      *  
      *  <p>The class extends DisplayObject, but you can use it even without adding it to the
      *  display tree. Just call the 'renderCustom' method from within another render method,
      *  and pass appropriate values for transformation matrix, alpha and blend mode.</p>
-     *  
+     *
+     *  @see Sprite  
      */ 
     public class QuadBatch extends DisplayObject
     {
@@ -67,7 +78,6 @@ package starling.core
         /** Helper objects. */
         private static var sHelperMatrix:Matrix = new Matrix();
         private static var sHelperMatrix3D:Matrix3D = new Matrix3D();
-        private static var sHelperPoint:Point = new Point();
         private static var sRenderAlpha:Vector.<Number> = new <Number>[1.0, 1.0, 1.0, 1.0];
         
         /** Creates a new QuadBatch instance with empty batch data. */
@@ -100,6 +110,7 @@ package starling.core
             registerPrograms();
         }
         
+        /** Creates a duplicate of the QuadBatch object. */
         public function clone():QuadBatch
         {
             var clone:QuadBatch = new QuadBatch();
@@ -252,9 +263,9 @@ package starling.core
                 RenderSupport.transformMatrixForObject(modelViewMatrix, quad);
             }
             
+            var tinted:Boolean = texture ? (quad.tinted || parentAlpha != 1.0) : false;
             var alpha:Number = parentAlpha * quad.alpha;
             var vertexID:int = mNumQuads * 4;
-            var tinted:Boolean = texture ? (quad.tinted || alpha != 1.0) : false;
             
             if (mNumQuads + 1 > mVertexData.numVertices / 4) expand();
             if (mNumQuads == 0) 

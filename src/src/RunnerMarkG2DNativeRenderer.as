@@ -35,7 +35,7 @@ package
 			engine = new RunnerEngine(s, stage.stageWidth, stage.stageHeight);
 			
 			createStats();
-			stats.visible = false;
+			//stats.visible = false;
 		}
 	}
 }

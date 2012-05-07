@@ -11,7 +11,7 @@
 	    <visible>true</visible>
 	    <aspectRatio>landscape</aspectRatio>
 	    <autoOrients>false</autoOrients>
-	    <fullScreen>false</fullScreen>
+	    <fullScreen>true</fullScreen>
 	    <renderMode>direct</renderMode>
 	</initialWindow>
  

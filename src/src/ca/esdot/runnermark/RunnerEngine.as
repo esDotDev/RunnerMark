@@ -77,10 +77,10 @@ package ca.esdot.runnermark
 			
 			var classes:Array = [new GNode()];
 			
-			createChildren();
-			
 			this.stageWidth = stageWidth;
 			this.stageHeight = stageHeight;
+			
+			createChildren();
 			
 			sky.width = stageWidth;
 			sky.height = stageHeight;

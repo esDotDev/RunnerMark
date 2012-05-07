@@ -1,7 +1,7 @@
 // =================================================================================================
 //
 //	Starling Framework
-//	Copyright 2011 Gamua OG. All Rights Reserved.
+//	Copyright 2012 Gamua OG. All Rights Reserved.
 //
 //	This program is free software. You can redistribute and/or modify it
 //	in accordance with the terms of the accompanying license agreement.
@@ -38,7 +38,6 @@ package starling.core
     import starling.events.EventDispatcher;
     import starling.events.ResizeEvent;
     import starling.events.TouchPhase;
-    import starling.events.TouchProcessor;
     
     /** Dispatched when a new render context is created. */
     [Event(name="context3DCreate", type="starling.events.Event")]
@@ -179,6 +178,7 @@ package starling.core
             mStage3D = stage3D;
             mStage = new Stage(viewPort.width, viewPort.height, stage.color);
             mNativeStage = stage;
+            mNativeOverlay = new Sprite();
             mTouchProcessor = new TouchProcessor(mStage);
             mJuggler = new Juggler();
             mAntiAliasing = 0;
@@ -373,19 +373,20 @@ package starling.core
         private function onEnterFrame(event:Event):void
         {
             makeCurrent();
+            updateNativeOverlay();
             
-            if (mNativeOverlay) updateNativeOverlay();
-            if (mStarted) 
-            {
-                advanceTime();
-                render();
-            }
+            // When there's a native overlay, we have to call 'render' even if Starling is 
+            // paused -- because the native stage is only updated on calls to 'context.present()'.
+            
+            if (mStarted) advanceTime();
+            if (mStarted || mNativeOverlay.parent) render();
         }
         
         private function onKey(event:KeyboardEvent):void
         {
-            makeCurrent();
+            if (!mStarted) return;
             
+            makeCurrent();
             mStage.dispatchEvent(new starling.events.KeyboardEvent(
                 event.type, event.charCode, event.keyCode, event.keyLocation, 
                 event.ctrlKey, event.altKey, event.shiftKey));
@@ -399,6 +400,8 @@ package starling.core
 
         private function onTouch(event:Event):void
         {
+            if (!mStarted) return;
+            
             var globalX:Number;
             var globalY:Number;
             var touchID:int;
@@ -543,17 +546,7 @@ package starling.core
         
         /** A Flash Sprite placed directly on top of the Starling content. Use it to display native
          *  Flash components. */ 
-        public function get nativeOverlay():Sprite
-        {
-            if (mNativeOverlay == null)
-            {
-                mNativeOverlay = new Sprite();
-                mNativeStage.addChild(mNativeOverlay);
-                updateNativeOverlay();
-            }
-            
-            return mNativeOverlay;
-        }
+        public function get nativeOverlay():Sprite { return mNativeOverlay; }
         
         /** Indicates if a small statistics box (with FPS and memory usage) is displayed. */
         public function get showStats():Boolean { return mStatsDisplay != null; }
@@ -562,11 +555,7 @@ package starling.core
             if (mContext == null)
             {
                 // Starling is not yet ready - we postpone this until it's initialized.
-                addEventListener(starling.events.Event.ROOT_CREATED, function onRC(event:Object):void
-                {
-                    showStats = value;
-                    removeEventListener(starling.events.Event.ROOT_CREATED, onRC);
-                });
+                addEventListener(starling.events.Event.ROOT_CREATED, onRootCreated);
             }
             else
             {
@@ -582,6 +571,12 @@ package starling.core
                     mStatsDisplay.removeFromParent(true);
                     mStatsDisplay = null;
                 }
+            }
+            
+            function onRootCreated(event:Object):void
+            {
+                showStats = value;
+                removeEventListener(starling.events.Event.ROOT_CREATED, onRootCreated);
             }
         }
         
@@ -627,9 +622,12 @@ package starling.core
         }
         
         public static function set multitouchEnabled(value:Boolean):void
-        {            
-            Multitouch.inputMode = value ? MultitouchInputMode.TOUCH_POINT :
-                                           MultitouchInputMode.NONE;
+        {
+            if (sCurrent) throw new IllegalOperationError(
+                "'multitouchEnabled' must be set before Starling instance is created");
+            else 
+                Multitouch.inputMode = value ? MultitouchInputMode.TOUCH_POINT :
+                                               MultitouchInputMode.NONE;
         }
         
         /** Indicates if Starling should automatically recover from a lost device context.
@@ -639,8 +637,8 @@ package starling.core
         public static function get handleLostContext():Boolean { return sHandleLostContext; }
         public static function set handleLostContext(value:Boolean):void 
         {
-            if (sCurrent != null) throw new IllegalOperationError(
-                "Setting must be changed before Starling instance is created");
+            if (sCurrent) throw new IllegalOperationError(
+                "'handleLostContext' must be set before Starling instance is created");
             else
                 sHandleLostContext = value;
         }

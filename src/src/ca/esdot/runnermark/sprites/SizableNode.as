@@ -33,14 +33,18 @@ package ca.esdot.runnermark.sprites
 			transform.rotation = value;
 		}
 		
-		public function get x():Number { return transform.x; }
+		public function get x():Number { 
+			return transform.x;// - this.width/2; 
+		}
 		public function set x(value:Number):void {
-			transform.x = value;
+			transform.x = value;//this.width/2 + value;
 		}
 		
-		public function get y():Number { return transform.y; }
+		public function get y():Number { 
+			return transform.y;// - this.height/2; 
+		}
 		public function set y(value:Number):void {
-			transform.y = value;
+			transform.y = value; //this.height/2 + value;
 		}
 		
 		public function get scaleX():Number { return transform.scaleX; }

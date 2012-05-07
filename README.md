@@ -20,7 +20,6 @@ Specifically, RunnerMark includes the following elements:
 * ~30 small dust sprites as your character runs, to simulate some level of a particles
 * Rudimentary AI and hit detection for all characters
 
-
 Scoring System
 ==============
 RunnerMark awards 580pts for rendering the basic scene at a solid 580 FPS. 
@@ -28,23 +27,27 @@ Then 1 additional point for each animated Enemy added to the scene.
 
 As an example, a score of 650 would indicate the basic scene @ 58fps + 70 animated Enemies. A score of 400, indicates the basic scene was only able to render at 40fps, and no Enemy's were added at all. 
 
+Target Frameworks
+=================
+The following rendering engines are currently supported:
+
+* GPU Render Mode (renderMode=gpu)
+* Starling
+* ND2D
+* Genome2D
+
+Haxe NME
+=========
+Thanks to Philippe we also have a Haxe NME Version!
+https://github.com/elsassph/nme-runnermark
+
+Haxe NME creates a highly optimized native application, so it's an excellent measuring stick for the Stage3D based frameworks. 
+
+
 Results
 =======
 
-* [Results-04-24-2012.txt](https://github.com/esDotDev/RunnerMark/blob/master/results/Results-04-24-2012.txt)
-
-Implementation
-==============
-Each benchmark is designed to be fully optimized for each framework in terms of rendering performance. 
-
-* [Starling Implementation](https://github.com/esDotDev/RunnerMark/blob/master/src/src/ca/esdot/runnermark/RunnerEngineStarling.as)
-All images are based off a single shared TextureAtlas.
-
-* [ND2D Implementation](https://github.com/esDotDev/RunnerMark/blob/master/src/src/ca/esdot/runnermark/RunnerEngineND2D.as)
-Rendered using a handful of Sprite2DBatch's, one for Enemies, one for Particles, one for Ground etc...
-
-* [Core Engine](https://github.com/esDotDev/RunnerMark/blob/master/src/src/ca/esdot/runnermark/RunnerEngine.as)
-Basic GPU Render Mode, uses simple Bitmaps() with shared bitmapData's. 
+* [Results.txt](https://github.com/esDotDev/RunnerMark/blob/master/results/Results.txt)
 
 
 Binaries

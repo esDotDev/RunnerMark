@@ -14,8 +14,10 @@ package ca.esdot.runnermark
 	import com.genome2d.textures.GTextureAtlas;
 	import com.genome2d.textures.factories.GTextureAtlasFactory;
 	import com.genome2d.textures.factories.GTextureFactory;
+	import com.gskinner.zoe.utils.CachedClip;
 	
 	import flash.display.BitmapData;
+	import flash.utils.setTimeout;
 	
 	import swc.Enemy;
 	import swc.Runner;
@@ -37,21 +39,7 @@ package ca.esdot.runnermark
 		public function RunnerEngineG2D(root:*, stageWidth:int, stageHeight:int) {
 			super(root, stageWidth, stageHeight);
 			
-			//Need to do some hacks here because G2D uses a coordinate plane system 
-			//(everthing is centered at 0,0 in the middle of the screen)
-			
-			//Fix Runner and Bg positions
-			bgStrip1.y = (stageHeight - bgStrip1.height)/2;
-			bgStrip2.y = (stageHeight - bgStrip2.height)/2;
-			
-			runner.x = 0;//-stageWidth * .25;
-			runner.y = 0;// stageHeight/2 - stageHeight * .2;
-			
-			//Fix initial Ground
-			lastGroundPiece = groundList[0];
-			groundList[0].x -= 500;
-			removeAllGround();
-			addGround(6);
+			runner.y += runner.height/2;
 		}
 		
 		override public function createChildren():void {
@@ -68,6 +56,8 @@ package ca.esdot.runnermark
 			var skySprite:GSprite = skyNode.addComponent(GSprite) as GSprite;
 			if(!skyTex){
 				skyTex = GTextureFactory.createFromBitmapData("sky", skyData, false); 
+				skyTex.pivotX = -skyTex.width/2;
+				skyTex.pivotY = -skyTex.height/2;
 			}
 			skySprite.setTexture(skyTex); 
 			sky = new GenericSprite(skyNode, null);
@@ -76,6 +66,8 @@ package ca.esdot.runnermark
 			//Add Bg1
 			if(!bg1Tex){
 				bg1Tex = GTextureFactory.createFromBitmapData("bg1Tex", bg1Data, true);
+				bg1Tex.pivotX = -bg1Tex.width/2;
+				bg1Tex.pivotY = -bg1Tex.height/2;
 			}
 			var bgNode:SizableNode = new SizableNode(null,  bg1Data.width * 2, bg1Data.height);
 			var node:GNode = new GNode();
@@ -95,6 +87,8 @@ package ca.esdot.runnermark
 			//Add Bg2
 			if(!bg2Tex){
 				bg2Tex = GTextureFactory.createFromBitmapData("bg2Tex", bg2Data, true);
+				bg2Tex.pivotX = -bg2Tex.width/2;
+				bg2Tex.pivotY = -bg2Tex.height/2;
 			}
 			bgNode = new SizableNode(null,  bg2Data.width * 2, bg2Data.height);
 			
@@ -134,10 +128,26 @@ package ca.esdot.runnermark
 		override protected function createGroundPiece():GenericSprite {
 			if(!groundTexture){
 				groundTexture = GTextureFactory.createFromBitmapData("ground", groundData, false);
+				groundTexture.pivotX = -groundTexture.width/2;
 			}
 			var node:SizableNode = new SizableNode("", groundData.width, groundData.height);
 			var sprite:GSprite = node.addComponent(GSprite) as GSprite;
 			sprite.setTexture(groundTexture);
+			_root.addChild(node);
+			_root.swapChildren(node, runner.display);
+			return new GenericSprite(node);
+		}
+	
+		
+		override protected function createParticle():GenericSprite {
+			if(!cloudTexture){
+				cloudTexture = GTextureFactory.createFromBitmapData("cloud", cloudData, false);
+				cloudTexture.pivotX = -cloudTexture.width/2;
+				cloudTexture.pivotY = -cloudTexture.height/2;
+			}
+			var node:SizableNode = new SizableNode("", cloudData.width, cloudData.height);
+			var sprite:GSprite = node.addComponent(GSprite) as GSprite;
+			sprite.setTexture(cloudTexture);
 			_root.addChild(node);
 			_root.swapChildren(node, runner.display);
 			return new GenericSprite(node);
@@ -152,37 +162,26 @@ package ca.esdot.runnermark
 			}
 		}
 		
-		override protected function createParticle():GenericSprite {
-			if(!cloudTexture){
-				cloudTexture = GTextureFactory.createFromBitmapData("cloud", cloudData, false);
-			}
-			var node:SizableNode = new SizableNode("", cloudData.width, cloudData.height);
-			var sprite:GSprite = node.addComponent(GSprite) as GSprite;
-			sprite.setTexture(cloudTexture);
-			_root.addChild(node);
-			_root.swapChildren(node, runner.display);
-			return new GenericSprite(node);
-		}
+
 		
 		override protected function createEnemy():EnemySprite {
 			if(!enemyAtlas){
 				enemyAtlas = GTextureAtlasFactory.createFromMovieClip("enemyAtlas", new swc.Enemy());
 			}
 			var node:SizableNode = new SizableNode(null, 100, 112);
-			
 			var clip:GMovieClip = node.addComponent(GMovieClip) as GMovieClip;
 			clip.setTextureAtlas(enemyAtlas);
 			clip.frames = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17];
 			clip.play();
-			runner = new RunnerSprite(node);
 			_root.addChild(node);
-			
 			return new EnemySprite(node);
 		}
 		
 		override protected function removeEnemy(enemy:GenericSprite):void {
 			super.removeEnemy(enemy);
 		}
+		
+		
 		
 	}
 	

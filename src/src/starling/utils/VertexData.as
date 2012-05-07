@@ -41,8 +41,6 @@ package starling.utils
      *  for that reason, the VertexData class mimics this behavior. You can choose how the alpha 
      *  values should be handled via the <code>premultipliedAlpha</code> property.</p>
      * 
-     *  <p><em>Note that vertex data with premultiplied alpha values will lose all <code>rgb</code>
-     *  information of a vertex with a zero <code>alpha</code> value.</em></p> 
      */ 
     public class VertexData 
     {
@@ -336,11 +334,7 @@ package starling.utils
                 }
             }
             
-            resultRect.x = minX;
-            resultRect.y = minY;
-            resultRect.width  = maxX - minX;
-            resultRect.height = maxY - minY;
-            
+            resultRect.setTo(minX, minY, maxX - minX, maxY - minY);
             return resultRect;
         }
         
