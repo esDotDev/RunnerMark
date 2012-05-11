@@ -45,10 +45,11 @@ package
 			engine = new RunnerEngineStarling(StarlingScene.instance, stage.stageWidth, stage.stageHeight);
 			createStats();
 		}
-		
+		/*
 		override protected function createStats():void {
 			new FastStatsStarling(StarlingScene.instance);
 		}
+		*/
 		
 		override protected function onEngineComplete():void {
 			Starling.juggler.purge();	

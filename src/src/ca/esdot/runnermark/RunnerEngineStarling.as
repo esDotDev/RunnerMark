@@ -24,6 +24,7 @@ package ca.esdot.runnermark
 	{
 		public var groundTexture:Texture;
 		public var cloudTexture:Texture;
+		public var enemyTextures:Vector.<Texture>;
 		
 		public var atlas:TextureAtlas;
 		public var playerAtlas:TextureAtlas;
@@ -84,22 +85,29 @@ package ca.esdot.runnermark
 			
 			runner = new RunnerSprite(clip);
 			_root.addChild(runner.display);
+			
+			//GroundTop
+			groundTexture = atlas.getTextures("ca.esdot.runnermark::RunnerEngine_GroundTop")[0];
+			//Cloud
+			cloudTexture = atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Cloud")[0];
+			//Enemy
+			enemyTextures = atlas.getTextures("swc::Enemy")
 		}
 		
 		override protected function createGroundPiece():GenericSprite {
-			var image:Image = new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_GroundTop")[0]);
+			var image:Image = new Image(groundTexture);
 			_root.addChildAt(image, _root.getChildIndex(bgStrip2.display) + 1);
 			return new GenericSprite(image);
 		}
 		
 		override protected function createParticle():GenericSprite {
-			var image:Image = new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Cloud")[0]);
+			var image:Image = new Image(cloudTexture);
 			_root.addChild(image);
 			return new GenericSprite(image);
 		}
 		
 		override protected function createEnemy():EnemySprite {
-			var enemy:MovieClip = new MovieClip(atlas.getTextures("swc::Enemy"), 60);
+			var enemy:MovieClip = new MovieClip(enemyTextures, 60);
 			enemy.play();
 			_root.addChildAt(enemy, _root.getChildIndex(runner.display));
 			Starling.juggler.add(enemy);
