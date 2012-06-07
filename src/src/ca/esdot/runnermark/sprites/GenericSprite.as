@@ -1,9 +1,5 @@
 package ca.esdot.runnermark.sprites
 {
-	import com.genome2d.components.GTransform;
-	import com.genome2d.components.renderables.GSprite;
-	import com.genome2d.core.GNode;
-	
 	import flash.utils.setInterval;
 
 	public class GenericSprite

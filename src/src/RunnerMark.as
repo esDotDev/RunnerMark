@@ -14,6 +14,7 @@ package
 	import flash.text.TextFormat;
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
+	import flash.system.System;
 	
 	[SWF(width="1024", height="768")]
 	public class RunnerMark extends Sprite
@@ -56,10 +57,11 @@ package
 			prevTime = getTimer();
 			
 			engine.fps = FastStats.fps;
-			engine.step(elapsed);
+
 			if(!engine.onComplete) { //Lazily inject onComplete handler into engine
 				engine.onComplete = onEngineComplete;
 			}
+			engine.step(elapsed);
 		}
 		
 		protected function restartEngine():void{
@@ -92,6 +94,9 @@ package
 			addChild(score);
 			
 			stage.addEventListener(MouseEvent.CLICK, onRestartClicked);
+			
+			engine = null;
+			System.gc();
 		}
 		
 		protected function onRestartClicked(event:MouseEvent):void {

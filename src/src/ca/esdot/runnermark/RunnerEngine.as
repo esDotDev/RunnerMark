@@ -188,7 +188,7 @@ package ca.esdot.runnermark
 	 * UPDATE METHODS
 	 * Probably won't need to override any of these, unless you're doing some advanced optimizations.
 	 **/
-		protected function updateRunner(elapsed:Number){
+		protected function updateRunner(elapsed:Number):void {
 			runner.update();
 			if(runner.display is CachedClip){
 				runner.display.step();
@@ -205,7 +205,7 @@ package ca.esdot.runnermark
 			}
 		}
 		
-		protected function updateGround(elapsed:Number){
+		protected function updateGround(elapsed:Number):void {
 			//Add platforms
 			if(steps % (fps > 30? 100 : 50) == 0){
 				addGround(1, stageHeight * .25 + stageHeight * .5 * Math.random());
@@ -312,9 +312,10 @@ package ca.esdot.runnermark
 		}
 		
 		protected function stopEngine():void {
-			while(_root.numChildren){
-				_root.removeChildAt(0);
-			}
+			_root.removeChildren();
+			enemyList.length = 0;
+			groundList.length = 0;
+			particleList.length = 0;
 		}
 		
 		
