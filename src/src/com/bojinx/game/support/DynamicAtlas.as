@@ -230,6 +230,9 @@ package com.bojinx.game.support
 				// just pass an array of configuration objects instead of an array
 				// of movie clips and use that object to supply things like name, animation etc.
 				name = getQualifiedClassName( mc ).replace( "::", "." );
+				if(name == "flash.display.MovieClip"){
+					name = mc.name;
+				}
 				
 				if ( !defaultAnimation )
 					defaultAnimation = name;

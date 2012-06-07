@@ -16,6 +16,7 @@ package
 	import flash.utils.flash_proxy;
 	import flash.utils.setTimeout;
 
+	[SWF(width="1024", height="768")]
 	public class RunnerMarkND2D extends RunnerMark
 	{
 		protected var world:World2D;

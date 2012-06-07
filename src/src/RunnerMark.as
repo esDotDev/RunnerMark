@@ -15,6 +15,7 @@ package
 	import flash.utils.getTimer;
 	import flash.utils.setTimeout;
 	
+	[SWF(width="1024", height="768")]
 	public class RunnerMark extends Sprite
 	{
 		[Embed(source="assets/scoreBg.png")]

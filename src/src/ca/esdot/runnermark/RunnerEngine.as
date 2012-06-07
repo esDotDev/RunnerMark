@@ -86,17 +86,17 @@ package ca.esdot.runnermark
 			sky.height = stageHeight;
 			
 			//BG1
-			bgStrip1.height = stageHeight * .7;
+			bgStrip1.height = stageHeight * .5 - 50;
 			bgStrip1.scaleX = bgStrip1.scaleY;
 			bgStrip1.y = stageHeight - bgStrip1.height;
 			
 			//BG2
-			bgStrip2.height = stageHeight * .7;
+			bgStrip2.height = stageHeight * .5 - 50;
 			bgStrip2.scaleX = bgStrip2.scaleY;
 			bgStrip2.y = stageHeight - bgStrip2.height;
 			
 			//Create Runner
-			groundY = stageHeight - runner.height - 75;
+			groundY = stageHeight - runner.height - 45;
 			runner.x = stageWidth * .2;
 			runner.y = groundY;
 			runner.groundY = groundY;
@@ -216,6 +216,8 @@ package ca.esdot.runnermark
 			for(var i:int = groundList.length - 1; i >= 0; i--){
 				ground = groundList[i];
 				ground.x -= elapsed * SPEED;
+				ground.x = ground.x
+					
 				//Remove ground
 				if(ground.x < -ground.width * 3){
 					groundList.splice(i, 1);
@@ -325,14 +327,14 @@ package ca.esdot.runnermark
 		protected function addGround(numPieces:int, height:int = 0):void {
 			var lastX:int = 0;
 			if(lastGroundPiece){
-				lastX = lastGroundPiece.x + lastGroundPiece.width;
+				lastX = lastGroundPiece.x + lastGroundPiece.width - 3;
 			}
 			var piece:GenericSprite;
 			for(var i:int = 0; i < numPieces; i++){
 				piece = createGroundPiece(); 
 				piece.y = runner.y + runner.height * .9 - height;
 				piece.x = lastX;
-				lastX += piece.width;
+				lastX += (piece.width - 3);
 				groundList.push(piece);
 			}
 			if(height == 0){ lastGroundPiece = piece; }

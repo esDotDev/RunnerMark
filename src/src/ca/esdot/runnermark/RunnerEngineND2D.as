@@ -1,9 +1,9 @@
 package ca.esdot.runnermark
 {
-	import ca.esdot.stats.FastStats;
 	import ca.esdot.runnermark.sprites.EnemySprite;
 	import ca.esdot.runnermark.sprites.GenericSprite;
 	import ca.esdot.runnermark.sprites.RunnerSprite;
+	import ca.esdot.stats.FastStats;
 	
 	import com.bojinx.game.object.MovieClipAnimation;
 	import com.bojinx.game.support.DynamicAtlas;
@@ -11,8 +11,12 @@ package ca.esdot.runnermark
 	import de.nulldesign.nd2d.display.Sprite2D;
 	import de.nulldesign.nd2d.display.Sprite2DBatch;
 	import de.nulldesign.nd2d.materials.texture.Texture2D;
+	import de.nulldesign.nd2d.materials.texture.TextureOption;
+	import de.nulldesign.nd2d.materials.texture.parser.TexturePackerParser;
 	
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.MovieClip;
 	import flash.geom.Point;
 	import flash.utils.flash_proxy;
 	
@@ -31,6 +35,9 @@ package ca.esdot.runnermark
 		
 		public function RunnerEngineND2D(root:*, stageWidth:int, stageHeight:int){
 			super(root, stageWidth, stageHeight);
+			
+			//runner.x = runner.y = 0;
+			//runner.y -= 100;
 		}
 		
 		override public function step(elapsed:Number):void {
@@ -41,68 +48,76 @@ package ca.esdot.runnermark
 		//http://docs.rsnewmedia.co.uk/display/nd2ddynatlas/Home
 		override public function createChildren():void {
 			
-			var skyData:BitmapData = createSkyData();			
-			var sprite:Sprite2D = new Sprite2D(Texture2D.textureFromBitmapData(skyData));
+			var sprite:Sprite2D = new Sprite2D(Texture2D.textureFromBitmapData(createSkyData()));
+			sprite.texture.textureOptions = TextureOption.MIPMAP_DISABLE | TextureOption.FILTERING_NEAREST | TextureOption.REPEAT_NORMAL;
 			sprite.pivot = new Point(-sprite.width/2, -sprite.height/2);
+			//_root.addChild(sprite);
 			sky = new GenericSprite(sprite);
-			_root.addChild(sky.display);
 			
-			sprite = new Sprite2D(Texture2D.textureFromBitmapData(new Bg1().bitmapData));
+			sprite = new Sprite2D(Texture2D.textureFromBitmapData(bg1Data));
+			sprite.texture.textureOptions = TextureOption.MIPMAP_DISABLE | TextureOption.FILTERING_NEAREST | TextureOption.REPEAT_NORMAL;
 			sprite.pivot = new Point(-sprite.width/2, -sprite.height/2);
+			//_root.addChild(sprite);
 			bgStrip1 = new GenericSprite(sprite);
-			_root.addChild(bgStrip1.display);
 			
-			sprite = new Sprite2D(Texture2D.textureFromBitmapData(new Bg2().bitmapData));
+			sprite = new Sprite2D(Texture2D.textureFromBitmapData(bg2Data));
+			sprite.texture.textureOptions = TextureOption.MIPMAP_DISABLE | TextureOption.FILTERING_NEAREST | TextureOption.REPEAT_NORMAL;
 			sprite.pivot = new Point(-sprite.width/2, -sprite.height/2);
+			//_root.addChild(sprite);
 			bgStrip2 = new GenericSprite(sprite);
-			_root.addChild(bgStrip2.display);
 			
-			//Ground Batch
-			groundBatch = new Sprite2DBatch(Texture2D.textureFromBitmapData(groundData));			
-			_root.addChild(groundBatch);
 			
-			//Runner
+			//Create texture atlas for all foreground elements
 			var atlas:DynamicAtlas = new DynamicAtlas();
-			atlas.fromMovieClips([new swc.Runner()]);
-			var spritesheet:MovieClipAnimation = new MovieClipAnimation(atlas, 60);
-			runnerBatch = new Sprite2DBatch(atlas.newTexture());
+			
+			var cloudMc:MovieClip = new MovieClip();
+			cloudMc.name = "cloud";
+			cloudMc.addChild(new Bitmap(cloudData));
+			
+			var groundMc:MovieClip = new MovieClip();
+			groundMc.name = "ground";
+			groundMc.addChild(new Bitmap(groundData));
+			
+			//Build Atlas
+			atlas.fromMovieClips([new swc.Runner(), new swc.Enemy(), cloudMc, groundMc]);
+			var texture:Texture2D = atlas.newTexture();
+			texture.textureOptions = TextureOption.MIPMAP_DISABLE | TextureOption.FILTERING_NEAREST | TextureOption.REPEAT_NORMAL;
+			var spritesheet:MovieClipAnimation = new MovieClipAnimation(atlas, 60, true);
+			
+			runnerBatch = new Sprite2DBatch(texture);
 			runnerBatch.setSpriteSheet(spritesheet);
 			_root.addChild(runnerBatch);
 			
-			runner = new RunnerSprite(new Sprite2D());
-			runnerBatch.addChild(runner.display as Sprite2D);
-			(runner.display as Sprite2D).spriteSheet.playAnimation("swc.Runner");
-			
-			//Enemy Batch
-			var atlas:DynamicAtlas = new DynamicAtlas();
-			atlas.fromMovieClips([new swc.Enemy()]);
-			var spritesheet:MovieClipAnimation = new MovieClipAnimation(atlas, 24);
-			enemyBatch = new Sprite2DBatch(atlas.newTexture());
-			enemyBatch.setSpriteSheet(spritesheet);
-			_root.addChild(enemyBatch);
-			
-			//Particle Batch
-			particleBatch = new Sprite2DBatch(Texture2D.textureFromBitmapData(cloudData));			
-			_root.addChild(particleBatch);
+			var rSprite:Sprite2D = new Sprite2D();
+			runner = new RunnerSprite(rSprite);
+			runnerBatch.addChild(rSprite);
+			rSprite.spriteSheet.playAnimation("swc.Runner");
+			rSprite.updateSize();
 		}
 		
 		override protected function createGroundPiece():GenericSprite {
 			var s:Sprite2D = new Sprite2D();
-			groundBatch.addChild(s);
-			s.pivot = new Point(-s.width/2, -s.height/2);
+			runnerBatch.addChildAt(s, 0);
+			s.spriteSheet.playAnimation("ground");
+			s.spriteSheet.stopCurrentAnimation();
+			s.updateSize();
 			return new GenericSprite(s, "ground");
 		}
 		
 		override protected function createParticle():GenericSprite {
 			var s:Sprite2D = new Sprite2D();
-			particleBatch.addChild(s);
-			s.pivot = new Point(-s.width/2, -s.height/2);
+			runnerBatch.addChild(s);
+			//s.spriteSheet.setFrameByAnimationName("cloud");
+			s.spriteSheet.playAnimation("cloud");
+			s.spriteSheet.stopCurrentAnimation();
+			
+			//s.pivot = new Point(-s.width/2, -s.height/2);
 			return new GenericSprite(s, "particle");
 		}
 		
 		override protected function createEnemy():EnemySprite {
 			var s:Sprite2D = new Sprite2D();
-			enemyBatch.addChild(s);
+			runnerBatch.addChild(s);
 			s.spriteSheet.playAnimation("swc.Enemy");
 			return new EnemySprite(s, "enemy");
 		}

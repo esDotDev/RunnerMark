@@ -32,9 +32,8 @@ package de.nulldesign.nd2d.materials.texture {
 
 	import de.nulldesign.nd2d.events.SpriteSheetAnimationEvent;
 	import de.nulldesign.nd2d.materials.texture.SpriteSheetAnimation;
-
+	
 	import flash.events.EventDispatcher;
-
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
@@ -149,9 +148,10 @@ package de.nulldesign.nd2d.materials.texture {
 			if(restart || activeAnimation != animationMap[name]) {
 				frameIdx = startIdx;
 				activeAnimation = animationMap[name];
+				frame = activeAnimation.frames[0];
 			}
 		}
-
+		
 		public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
 
 		}
@@ -179,6 +179,14 @@ package de.nulldesign.nd2d.materials.texture {
 
 		public function setFrameByName(value:String):void {
 			frame = getIndexForFrame(value);
+		}
+		
+		
+		public function setFrameByAnimationName(name:String):void {
+			trace(animationMap[name], name);
+			if(animationMap[name]){
+				frame = animationMap[name].frames[0];
+			}
 		}
 
 		public function getUVRectForFrame(textureWidth:Number, textureHeight:Number):Rectangle {

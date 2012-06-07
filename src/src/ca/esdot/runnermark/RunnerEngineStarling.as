@@ -76,6 +76,7 @@ package ca.esdot.runnermark
 			
 			//Runner
 			var clip:MovieClip = new MovieClip(atlas.getTextures("swc::Runner"), 60);
+			clip.smoothing = TextureSmoothing.NONE;
 			clip.x = stageWidth * .2;
 			clip.y = stageHeight * .7;
 			clip.play();

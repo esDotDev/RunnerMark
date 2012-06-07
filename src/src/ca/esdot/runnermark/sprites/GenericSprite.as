@@ -31,7 +31,9 @@ package ca.esdot.runnermark.sprites
 			display.x = value;
 		}
 		
-		public function get y():Number { return display.y; }
+		public function get y():Number { 
+			return display.y; 
+		}
 		public function set y(value:Number):void {
 			display.y = value;
 		}

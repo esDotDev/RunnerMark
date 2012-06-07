@@ -143,6 +143,13 @@ package de.nulldesign.nd2d.display {
 				_height = spriteSheet.spriteHeight;
 			}
 		}
+		
+		public function updateSize():void {
+			if(spriteSheet) {
+				_width = spriteSheet.spriteWidth;
+				_height = spriteSheet.spriteHeight;
+			}
+		}
 
 		override public function get numTris():uint {
 			return 2;
@@ -217,6 +224,7 @@ package de.nulldesign.nd2d.display {
 			material.colorTransform = combinedColorTransform;
 			material.spriteSheet = spriteSheet;
 			material.texture = texture;
+			material.nodeTinted = nodeIsTinted;
 
 			if(mask) {
 
