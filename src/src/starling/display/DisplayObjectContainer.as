@@ -112,7 +112,7 @@ package starling.display
             {
                 child.removeFromParent();
                 mChildren.splice(index, 0, child);
-                child.setParent(this);                
+                child.setParent(this);
                 child.dispatchEventWith(Event.ADDED, true);
                 
                 if (stage)
@@ -153,7 +153,8 @@ package starling.display
                 }
                 
                 child.setParent(null);
-                mChildren.splice(index, 1);
+                index = mChildren.indexOf(child); // index might have changed by event handler
+                if (index >= 0) mChildren.splice(index, 1); 
                 if (dispose) child.dispose();
             }
             else
@@ -313,7 +314,7 @@ package starling.display
             for (var i:int=0; i<numChildren; ++i)
             {
                 var child:DisplayObject = mChildren[i];
-                if (child.alpha != 0.0 && child.visible && child.scaleX != 0.0 && child.scaleY != 0.0)
+                if (child.hasVisibleArea)
                 {
                     var blendMode:String = child.blendMode;
                     var blendModeChange:Boolean = blendMode != BlendMode.AUTO;

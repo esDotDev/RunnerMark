@@ -32,8 +32,9 @@ package de.nulldesign.nd2d.materials.texture {
 
 	import de.nulldesign.nd2d.events.SpriteSheetAnimationEvent;
 	import de.nulldesign.nd2d.materials.texture.SpriteSheetAnimation;
-	
+
 	import flash.events.EventDispatcher;
+
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
@@ -151,7 +152,7 @@ package de.nulldesign.nd2d.materials.texture {
 				frame = activeAnimation.frames[0];
 			}
 		}
-		
+
 		public function addAnimation(name:String, keyFrames:Array, loop:Boolean):void {
 
 		}
@@ -173,19 +174,31 @@ package de.nulldesign.nd2d.materials.texture {
 			return frames[frameIdx > -1 ? frameIdx : frame];
 		}
 
+		/**
+		 * converts a frame name to a index
+		 * @param name
+		 * @return
+		 */
 		public function getIndexForFrame(name:String):uint {
 			return frameNameToIndex[name];
 		}
 
+		/**
+		 * sets an a frame by a given name
+		 * @param value
+		 */
 		public function setFrameByName(value:String):void {
 			frame = getIndexForFrame(value);
 		}
-		
-		
-		public function setFrameByAnimationName(name:String):void {
-			trace(animationMap[name], name);
-			if(animationMap[name]){
-				frame = animationMap[name].frames[0];
+
+		/**
+		 * Convenience method to directly set an animation frame by name
+		 * @param name of the animation to set
+		 * @param index frame in the animation to set
+		 */
+		public function setFrameByAnimationName(name:String, index:uint = 0):void {
+			if(animationMap[name]) {
+				frame = animationMap[name].frames[index];
 			}
 		}
 

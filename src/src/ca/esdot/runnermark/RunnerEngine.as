@@ -1,5 +1,7 @@
 package ca.esdot.runnermark
 {
+	import avmplus.getQualifiedClassName;
+	
 	import ca.esdot.runnermark.sprites.EnemySprite;
 	import ca.esdot.runnermark.sprites.GenericSprite;
 	import ca.esdot.runnermark.sprites.RunnerSprite;
@@ -75,6 +77,7 @@ package ca.esdot.runnermark
 			lastIncrement = getTimer() + 2000;
 			runnerScore = 0;
 			
+			trace("Starting: ", getQualifiedClassName(this));
 			var classes:Array = [new GNode()];
 			
 			this.stageWidth = stageWidth;

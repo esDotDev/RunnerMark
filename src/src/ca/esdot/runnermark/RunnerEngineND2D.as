@@ -35,9 +35,6 @@ package ca.esdot.runnermark
 		
 		public function RunnerEngineND2D(root:*, stageWidth:int, stageHeight:int){
 			super(root, stageWidth, stageHeight);
-			
-			//runner.x = runner.y = 0;
-			//runner.y -= 100;
 		}
 		
 		override public function step(elapsed:Number):void {
@@ -51,21 +48,20 @@ package ca.esdot.runnermark
 			var sprite:Sprite2D = new Sprite2D(Texture2D.textureFromBitmapData(createSkyData()));
 			sprite.texture.textureOptions = TextureOption.MIPMAP_DISABLE | TextureOption.FILTERING_NEAREST | TextureOption.REPEAT_NORMAL;
 			sprite.pivot = new Point(-sprite.width/2, -sprite.height/2);
-			//_root.addChild(sprite);
+			_root.addChild(sprite);
 			sky = new GenericSprite(sprite);
 			
 			sprite = new Sprite2D(Texture2D.textureFromBitmapData(bg1Data));
 			sprite.texture.textureOptions = TextureOption.MIPMAP_DISABLE | TextureOption.FILTERING_NEAREST | TextureOption.REPEAT_NORMAL;
 			sprite.pivot = new Point(-sprite.width/2, -sprite.height/2);
-			//_root.addChild(sprite);
+			_root.addChild(sprite);
 			bgStrip1 = new GenericSprite(sprite);
 			
 			sprite = new Sprite2D(Texture2D.textureFromBitmapData(bg2Data));
 			sprite.texture.textureOptions = TextureOption.MIPMAP_DISABLE | TextureOption.FILTERING_NEAREST | TextureOption.REPEAT_NORMAL;
 			sprite.pivot = new Point(-sprite.width/2, -sprite.height/2);
-			//_root.addChild(sprite);
+			_root.addChild(sprite);
 			bgStrip2 = new GenericSprite(sprite);
-			
 			
 			//Create texture atlas for all foreground elements
 			var atlas:DynamicAtlas = new DynamicAtlas();
@@ -91,8 +87,7 @@ package ca.esdot.runnermark
 			var rSprite:Sprite2D = new Sprite2D();
 			runner = new RunnerSprite(rSprite);
 			runnerBatch.addChild(rSprite);
-			rSprite.spriteSheet.playAnimation("swc.Runner");
-			rSprite.updateSize();
+			rSprite.playAnimation("swc.Runner");
 		}
 		
 		override protected function createGroundPiece():GenericSprite {
@@ -100,7 +95,6 @@ package ca.esdot.runnermark
 			runnerBatch.addChildAt(s, 0);
 			s.spriteSheet.playAnimation("ground");
 			s.spriteSheet.stopCurrentAnimation();
-			s.updateSize();
 			return new GenericSprite(s, "ground");
 		}
 		

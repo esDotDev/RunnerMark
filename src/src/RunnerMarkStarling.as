@@ -27,13 +27,13 @@ package
 				initComplete = true;
 				_starling = new Starling(StarlingScene, stage);
 				_starling.start();
-				_starling.addEventListener(starling.events.Event.CONTEXT3D_CREATE, onContextReady);
+				_starling.addEventListener(starling.events.Event.ROOT_CREATED, onStarlingReady);
 			} else {
 				createEngine();
 			}
 		}
 		
-		protected function onContextReady(event:starling.events.Event):void {
+		protected function onStarlingReady(event:starling.events.Event):void {
 			//We need to get the StarlingScene.instance, and for some reason it's still null... 
 			setTimeout(createEngine, 100);
 		}
