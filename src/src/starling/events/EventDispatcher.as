@@ -52,7 +52,7 @@ package starling.events
             if (mEventListeners == null)
                 mEventListeners = new Dictionary();
             
-            var listeners:Vector.<Function> = mEventListeners[type];
+            var listeners:Vector.<Function> = mEventListeners[type] as Vector.<Function>;
             if (listeners == null)
                 mEventListeners[type] = new <Function>[listener];
             else if (listeners.indexOf(listener) == -1) // check for duplicates
@@ -64,7 +64,7 @@ package starling.events
         {
             if (mEventListeners)
             {
-                var listeners:Vector.<Function> = mEventListeners[type];
+                var listeners:Vector.<Function> = mEventListeners[type] as Vector.<Function>;
                 if (listeners)
                 {
                     var numListeners:int = listeners.length;
@@ -110,7 +110,11 @@ package starling.events
         
         private function invoke(event:Event):Boolean
         {
-            var listeners:Vector.<Function> = mEventListeners ? mEventListeners[event.type] : null;
+            var listeners:Vector.<Function>;
+            if(mEventListeners)
+            {
+                listeners = mEventListeners[event.type] as Vector.<Function>;
+            }
             var numListeners:int = listeners == null ? 0 : listeners.length;
             
             if (numListeners)
@@ -147,14 +151,14 @@ package starling.events
             // we determine the bubble chain before starting to invoke the listeners.
             // that way, changes done by the listeners won't affect the bubble chain.
             
-            var chain:Vector.<DisplayObject>;
+            var chain:Vector.<EventDispatcher>;
             var element:DisplayObject = this as DisplayObject;
             var length:int = 1;
             
             if (sBubbleChains.length > 0) { chain = sBubbleChains.pop(); chain[0] = element; }
-            else chain = new <DisplayObject>[element];
+            else chain = new <EventDispatcher>[element];
             
-            while (element = element.parent)
+            while ((element = element.parent) != null)
                 chain[length++] = element;
 
             for (var i:int=0; i<length; ++i)
@@ -183,7 +187,11 @@ package starling.events
         /** Returns if there are listeners registered for a certain event type. */
         public function hasEventListener(type:String):Boolean
         {
-            var listeners:Vector.<Function> = mEventListeners ? mEventListeners[type] : null;
+            var listeners:Vector.<Function>;
+            if(mEventListeners)
+            {
+                listeners = mEventListeners[type] as Vector.<Function>;
+            }
             return listeners ? listeners.length != 0 : false;
         }
     }

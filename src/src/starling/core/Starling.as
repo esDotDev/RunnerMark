@@ -13,6 +13,8 @@ package starling.core
     import flash.display.Sprite;
     import flash.display.Stage3D;
     import flash.display3D.Context3D;
+    import flash.display3D.Context3DCompareMode;
+    import flash.display3D.Context3DTriangleFace;
     import flash.display3D.Program3D;
     import flash.errors.IllegalOperationError;
     import flash.events.ErrorEvent;
@@ -31,6 +33,7 @@ package starling.core
     import flash.utils.ByteArray;
     import flash.utils.Dictionary;
     import flash.utils.getTimer;
+    import flash.utils.setTimeout;
     
     import starling.animation.Juggler;
     import starling.display.DisplayObject;
@@ -143,7 +146,7 @@ package starling.core
     public class Starling extends EventDispatcher
     {
         /** The version of the Starling framework. */
-        public static const VERSION:String = "1.1";
+        public static const VERSION:String = "1.2";
         
         // members
         
@@ -224,10 +227,11 @@ package starling.core
             stage.addEventListener(KeyboardEvent.KEY_UP, onKey, false, 0, true);
             stage.addEventListener(Event.RESIZE, onResize, false, 0, true);
             
-            if (mStage3D.context3D)
+            if (mStage3D.context3D && mStage3D.context3D.driverInfo != "Disposed")
             {
                 mShareContext = true;
-                initialize();
+                setTimeout(initialize, 1); // we don't call it right away, because Starling should
+                                           // behave the same way with or without a shared context
             }
             else
             {
@@ -260,6 +264,7 @@ package starling.core
             mNativeStage.removeEventListener(KeyboardEvent.KEY_DOWN, onKey, false);
             mNativeStage.removeEventListener(KeyboardEvent.KEY_UP, onKey, false);
             mNativeStage.removeEventListener(Event.RESIZE, onResize, false);
+            mNativeStage.removeChild(mNativeOverlay);
             
             mStage3D.removeEventListener(Event.CONTEXT3D_CREATE, onContextCreated, false);
             mStage3D.removeEventListener(ErrorEvent.ERROR, onStage3DError, false);
@@ -273,6 +278,7 @@ package starling.core
             if (mContext && !mShareContext) mContext.dispose();
             if (mTouchProcessor) mTouchProcessor.dispose();
             if (mSupport) mSupport.dispose();
+            if (mStage) mStage.dispose();
             if (sCurrent == this) sCurrent = null;
         }
         
@@ -283,10 +289,7 @@ package starling.core
             makeCurrent();
             
             initializeGraphicsAPI();
-            dispatchEventWith(starling.events.Event.CONTEXT3D_CREATE, false, mContext);
-            
             initializeRoot();
-            dispatchEventWith(starling.events.Event.ROOT_CREATED, false, root);
             
             mTouchProcessor.simulateMultitouch = mSimulateMultitouch;
             mLastFrameTimestamp = getTimer() / 1000.0;
@@ -301,7 +304,9 @@ package starling.core
             updateViewPort();
             
             trace("[Starling] Initialization complete.");
-            trace("[Starling] Display Driver:" + mContext.driverInfo);
+            trace("[Starling] Display Driver:", mContext.driverInfo);
+            
+            dispatchEventWith(starling.events.Event.CONTEXT3D_CREATE, false, mContext);
         }
         
         private function initializeRoot():void
@@ -311,6 +316,8 @@ package starling.core
             var rootObject:DisplayObject = new mRootClass();
             if (rootObject == null) throw new Error("Invalid root class: " + mRootClass);
             mStage.addChildAt(rootObject, 0);
+            
+            dispatchEventWith(starling.events.Event.ROOT_CREATED, false, root);
         }
         
         /** Calls <code>advanceTime()</code> (with the time that has passed since the last frame)
@@ -331,9 +338,9 @@ package starling.core
         {
             makeCurrent();
             
+            mTouchProcessor.advanceTime(passedTime);
             mStage.advanceTime(passedTime);
             mJuggler.advanceTime(passedTime);
-            mTouchProcessor.advanceTime(passedTime);
         }
         
         /** Renders the complete display list. Before rendering, the context is cleared; afterwards,
@@ -350,7 +357,12 @@ package starling.core
             if (!mShareContext)
                 RenderSupport.clear(mStage.color, 1.0);
             
-            mSupport.setOrthographicProjection(mStage.stageWidth, mStage.stageHeight);
+            mContext.setDepthTest(false, Context3DCompareMode.ALWAYS);
+            mContext.setCulling(Context3DTriangleFace.NONE);
+            
+            mSupport.setOrthographicProjection(0, 0, mStage.stageWidth, mStage.stageHeight);
+            mSupport.renderTarget = null; // back buffer
+            
             mStage.render(mSupport, 1.0);
             mSupport.finishQuadBatch();
             
@@ -615,22 +627,21 @@ package starling.core
         public function get nativeOverlay():Sprite { return mNativeOverlay; }
         
         /** Indicates if a small statistics box (with FPS, memory usage and draw count) is displayed. */
-        public function get showStats():Boolean { return mStatsDisplay != null; }
+        public function get showStats():Boolean { return mStatsDisplay && mStatsDisplay.parent; }
         public function set showStats(value:Boolean):void
         {
-            if (mStatsDisplay && !value)
+            if (value == showStats) return;
+            
+            if (value)
             {
-                mStatsDisplay.removeFromParent(true);
-                mStatsDisplay = null;
+                if (mStatsDisplay) mStage.addChild(mStatsDisplay);
+                else               showStatsAt();
             }
-            else if (!mStatsDisplay && value)
-            {
-                showStatsAt();
-            }
+            else mStatsDisplay.removeFromParent();
         }
         
         /** Displays the statistics box at a certain position. */
-        public function showStatsAt(hAlign:String="left", vAlign:String="top"):void
+        public function showStatsAt(hAlign:String="left", vAlign:String="top", scale:Number=1):void
         {
             if (mContext == null)
             {
@@ -643,12 +654,13 @@ package starling.core
                 {
                     mStatsDisplay = new StatsDisplay();
                     mStatsDisplay.touchable = false;
-                    mStatsDisplay.scaleX = mStatsDisplay.scaleY = 1.0 / contentScaleFactor;
                     mStage.addChild(mStatsDisplay);
                 }
                 
                 var stageWidth:int  = mStage.stageWidth;
                 var stageHeight:int = mStage.stageHeight;
+                
+                mStatsDisplay.scaleX = mStatsDisplay.scaleY = scale;
                 
                 if (hAlign == HAlign.LEFT) mStatsDisplay.x = 0;
                 else if (hAlign == HAlign.RIGHT) mStatsDisplay.x = stageWidth - mStatsDisplay.width; 
@@ -661,7 +673,7 @@ package starling.core
             
             function onRootCreated():void
             {
-                showStatsAt(hAlign, vAlign);
+                showStatsAt(hAlign, vAlign, scale);
                 removeEventListener(starling.events.Event.ROOT_CREATED, onRootCreated);
             }
         }
@@ -729,9 +741,11 @@ package starling.core
         }
         
         /** Indicates if Starling should automatically recover from a lost device context.
-         *  On some systems, an upcoming screensaver or entering sleep mode may invalidate the
-         *  render context. This setting indicates if Starling should recover from such incidents.
-         *  Beware that this has a huge impact on memory consumption! @default false */
+         *  On some systems, an upcoming screensaver or entering sleep mode may 
+         *  invalidate the render context. This setting indicates if Starling should recover from 
+         *  such incidents. Beware that this has a huge impact on memory consumption!
+         *  It is recommended to enable this setting on Android and Windows, but to deactivate it
+         *  on iOS and Mac OS X. @default false */
         public static function get handleLostContext():Boolean { return sHandleLostContext; }
         public static function set handleLostContext(value:Boolean):void 
         {

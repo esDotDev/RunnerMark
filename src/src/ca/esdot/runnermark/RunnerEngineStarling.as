@@ -1,13 +1,14 @@
 package ca.esdot.runnermark
 {
+	import com.emibap.textureAtlas.DynamicAtlas;
+	
+	import flash.display.BitmapData;
+	
+	import avmplus.getQualifiedClassName;
+	
 	import ca.esdot.runnermark.sprites.EnemySprite;
 	import ca.esdot.runnermark.sprites.GenericSprite;
 	import ca.esdot.runnermark.sprites.RunnerSprite;
-	
-	import com.emibap.textureAtlas.DynamicAtlas;
-	import com.gskinner.zoe.utils.CachedClip;
-	
-	import flash.display.BitmapData;
 	
 	import starling.core.Starling;
 	import starling.display.Image;
@@ -53,10 +54,10 @@ package ca.esdot.runnermark
 			var sprite:Sprite = new Sprite();
 			
 			//BG Strip 1
-			bitmap1 =  new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg1")[0]);
+			bitmap1 =  new Image(atlas.getTextures(getQualifiedClassName(Bg1))[0]);
 			bitmap1.smoothing = TextureSmoothing.NONE;
 			sprite.addChild(bitmap1);
-			bitmap2 = new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg1")[0]);
+			bitmap2 = new Image(atlas.getTextures(getQualifiedClassName(Bg1))[0]);
 			bitmap2.smoothing = TextureSmoothing.NONE;
 			bitmap2.x = bitmap1.width;
 			sprite.addChild(bitmap2);
@@ -65,10 +66,10 @@ package ca.esdot.runnermark
 			
 			//BG Strip 2
 			sprite = new Sprite();
-			bitmap1 =  new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg2")[0]);
+			bitmap1 =  new Image(atlas.getTextures(getQualifiedClassName(Bg2))[0]);
 			bitmap1.smoothing = TextureSmoothing.NONE;
 			sprite.addChild(bitmap1);
-			bitmap2 = new Image(atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Bg2")[0]);
+			bitmap2 = new Image(atlas.getTextures(getQualifiedClassName(Bg2))[0]);
 			bitmap2.smoothing = TextureSmoothing.NONE;
 			bitmap2.x = bitmap1.width;
 			sprite.addChild(bitmap2);
@@ -88,9 +89,9 @@ package ca.esdot.runnermark
 			_root.addChild(runner.display);
 			
 			//GroundTop
-			groundTexture = atlas.getTextures("ca.esdot.runnermark::RunnerEngine_GroundTop")[0];
+			groundTexture = atlas.getTextures(getQualifiedClassName(GroundTop))[0];
 			//Cloud
-			cloudTexture = atlas.getTextures("ca.esdot.runnermark::RunnerEngine_Cloud")[0];
+			cloudTexture = atlas.getTextures(getQualifiedClassName(Cloud))[0];
 			//Enemy
 			enemyTextures = atlas.getTextures("swc::Enemy")
 		}

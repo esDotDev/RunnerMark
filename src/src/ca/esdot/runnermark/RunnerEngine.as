@@ -23,19 +23,19 @@ package ca.esdot.runnermark
 	
 	public class RunnerEngine
 	{	
-		[Embed(source="assets/bg1.png")]
+		[Embed(source="/assets/bg1.png")]
 		protected static var Bg1:Class;
 		public static var bg1Data:BitmapData = new Bg1().bitmapData;
 		
-		[Embed(source="assets/bg2.png")]
+		[Embed(source="/assets/bg2.png")]
 		protected static var Bg2:Class;
 		public static var bg2Data:BitmapData = new Bg2().bitmapData;
 		
-		[Embed(source="assets/groundTop.png")]
+		[Embed(source="/assets/groundTop.png")]
 		protected static var GroundTop:Class;
 		public static var groundData:BitmapData = new GroundTop().bitmapData;
 		
-		[Embed(source="assets/cloud.png")]
+		[Embed(source="/assets/cloud.png")]
 		protected static var Cloud:Class;
 		public static var cloudData:BitmapData = new Cloud().bitmapData;
 		
